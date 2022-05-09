@@ -1,1 +1,4 @@
-<div>Sets Placeholder</div>;
+const Sets = () => {
+  return <div>Sets Placeholder</div>;
+};
+export default Sets;
