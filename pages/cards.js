@@ -23,7 +23,7 @@ const Cards = () => {
   // Escaping the Escape because of EncodeURIComponent which is baked in
   const PokemonGroup = gql`
   query PokemonSingle {
-    card(q: "name:\\\"${cardValue}\\\"") @rest(type: "Card", path: "?{args}") {
+    card(q: "name:\\\"${cardValue}\\\"") @rest(type: "Card", path: "cards?{args}") {
       data
     }
   }
