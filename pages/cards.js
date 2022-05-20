@@ -1,4 +1,4 @@
-import Link from "next/link";
+// import Link from "next/link";
 import { useQuery, gql } from "@apollo/client";
 import { useState } from "react";
 import CardSingle from "../components/CardSingle";
@@ -20,14 +20,15 @@ const Cards = () => {
     e.preventDefault();
   };
 
-  // Escaping the Escape because of EncodeURIComponent which is baked in
+  // Escaping the Escape because it needs to use double quotes inside double quotes for multiple word queries
   const PokemonGroup = gql`
-  query PokemonSingle {
-    card(q: "name:\\\"${cardValue}\\\"") @rest(type: "Card", path: "cards?{args}") {
-      data
+    query PokemonSingle {
+      card(q: "name:\\"${cardValue}\\"")
+        @rest(type: "Card", path: "cards?{args}") {
+        data
+      }
     }
-  }
-`;
+  `;
 
   console.log(cardValue);
 
