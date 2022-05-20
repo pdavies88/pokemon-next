@@ -1,5 +1,6 @@
 import { useRouter } from "next/router";
 import { useQuery, gql } from "@apollo/client";
+import ImageSize from "../../utils/image";
 
 const SetEra = () => {
   const router = useRouter();
@@ -8,15 +9,15 @@ const SetEra = () => {
   const eraSwitch = (era) => {
     switch (era) {
       case "diamond-pearl":
-        return "Diamond & Pearl";
+        return "diamond";
       case "heartgold-soulsilver":
-        return "HeartGold & SoulSilver";
+        return "heartgold";
       case "black-white":
-        return "Black & White";
+        return "black";
       case "sun-moon":
-        return "Sun & Moon";
+        return "sun";
       case "sword-shield":
-        return "Sword & Shield";
+        return "sword";
       default:
         return era;
     }
@@ -24,9 +25,9 @@ const SetEra = () => {
 
   const PokemonGroup = gql`
     query PokemonSet {
-      set(q: "series:\\\"${eraSwitch(
+      set(q: "series:${eraSwitch(
         setEra
-      )}\\\"") @rest(type: "Set", path: "sets?{args}") {
+      )}") @rest(type: "Set", path: "sets?{args}") {
         data
       }
     }
@@ -44,12 +45,8 @@ const SetEra = () => {
             <div>
               {set.name} - {set.total} - {set.releaseDate}
             </div>
-            <div>
-              <img src={set.images.logo} />
-            </div>
-            <div>
-              <img src={set.images.symbol} />
-            </div>
+            <ImageSize src={set.images.logo} />
+            <ImageSize src={set.images.symbol} />
           </div>
         ))}
     </>
