@@ -38,18 +38,20 @@ const SetEra = () => {
   const activeSet = data?.set.data;
 
   return (
-    <>
+    <div className="flex-grid">
       {activeSet &&
         activeSet.map((set, i) => (
-          <div key={i}>
-            <div>
-              {set.name} - {set.total} - {set.releaseDate}
+          <div key={i} className="column halves">
+            <div className="container">
+              <div>
+                {set.name} - {set.total} - {set.releaseDate}
+              </div>
+              <ImageSize src={set.images.logo} imageSize="small" />
+              <ImageSize src={set.images.symbol} imageSize="icon" />
             </div>
-            <ImageSize src={set.images.logo} />
-            <ImageSize src={set.images.symbol} />
           </div>
         ))}
-    </>
+    </div>
   );
 };
 export default SetEra;
