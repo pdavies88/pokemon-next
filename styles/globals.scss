@@ -24,6 +24,7 @@ a {
   display: flex;
   flex-wrap: wrap;
   max-width: 75rem;
+  margin: 0 auto;
   padding: 3rem;
   .column{
     flex: 1 1 auto;
