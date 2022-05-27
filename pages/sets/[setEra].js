@@ -1,6 +1,8 @@
 import { useRouter } from "next/router";
 import { useQuery, gql } from "@apollo/client";
 import ImageSize from "../../utils/image";
+import { useSlug } from "../../utils/useSlug";
+import Link from "next/link";
 
 const SetEra = () => {
   const router = useRouter();
@@ -42,13 +44,15 @@ const SetEra = () => {
       {activeSet &&
         activeSet.map((set, i) => (
           <div key={i} className="column halves">
-            <div className="container">
-              <div>
-                {set.name} - {set.total} - {set.releaseDate}
+            <Link href={`/sets/${setEra}/${useSlug(set.name)}`}>
+              <div className="container">
+                <div>
+                  {set.name} - {set.total} - {set.releaseDate}
+                </div>
+                <ImageSize src={set.images.logo} imageSize="small" />
+                <ImageSize src={set.images.symbol} imageSize="icon" />
               </div>
-              <ImageSize src={set.images.logo} imageSize="small" />
-              <ImageSize src={set.images.symbol} imageSize="icon" />
-            </div>
+            </Link>
           </div>
         ))}
     </div>

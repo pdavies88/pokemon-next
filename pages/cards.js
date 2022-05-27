@@ -30,13 +30,9 @@ const Cards = () => {
     }
   `;
 
-  console.log(cardValue);
-
   const { data } = useQuery(PokemonGroup, {
     skip: valuePending,
   });
-
-  console.log(data ? data.card.data : null);
 
   return (
     <div>
@@ -48,9 +44,15 @@ const Cards = () => {
         </label>
         <input type="submit" value="Submit" />
       </form>
-      {data
-        ? data.card.data.map((card, i) => <CardSingle card={card} key={i} />)
-        : null}
+      <div className="flex-grid">
+        {data
+          ? data.card.data.map((card, i) => (
+              <div key={i} className="column quarters">
+                <CardSingle card={card} />
+              </div>
+            ))
+          : null}
+      </div>
     </div>
   );
 };

@@ -1,3 +1,5 @@
+import ImageSize from "../utils/image";
+
 const CardSingle = (props) => {
   const { name, id, images } = props.card;
   return (
@@ -5,9 +7,7 @@ const CardSingle = (props) => {
       <div>
         {name} - {id}
       </div>
-      <div>
-        <img src={images.small} />
-      </div>
+      <ImageSize src={images.small} imageSize="large" />
     </div>
   );
 };
