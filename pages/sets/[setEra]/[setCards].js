@@ -1,41 +1,34 @@
-import { useRouter } from "next/router";
-import { useQuery, gql } from "@apollo/client";
-import { useEffect, useState } from "react";
+import { gql } from "@apollo/client";
 import CardSingle from "../../../components/CardSingle";
+import client from "../../../apollo-client";
 
-const SetCards = () => {
-  const router = useRouter();
-  const { setCards } = router.query;
-  const [routerPending, setRouterPending] = useState(true);
-  const [cardsQuery, setCardsQuery] = useState();
+export async function getServerSideProps(context) {
+  const { setCards } = context.params;
+  const setCardsFormatted = setCards.split("-").join(" ");
 
-  // Escaping the Escape because it needs to use double quotes inside double quotes for multiple word queries
-  // Example: Vivid Voltage
-  // q: "set.name:\\"vivid voltage\\""
-  const PokemonGroup = gql`
-    query PokemonSingle {
-      setCard(q: "set.name:\\"${cardsQuery}\\"")
-        @rest(type: "SetCard", path: "cards?{args}") {
-        data
+  const { data } = await client.query({
+    query: gql`
+      query PokemonSingle {
+        setCard(q: "set.name:\\"${setCardsFormatted}\\"")
+          @rest(type: "SetCard", path: "cards?{args}") {
+          data
+        }
       }
-    }
-  `;
-
-  useEffect(() => {
-    if (setCards) {
-      setCardsQuery(setCards.split("-").join(" "));
-      setRouterPending(false);
-    }
-  }, [setCards]);
-
-  const { data } = useQuery(PokemonGroup, {
-    skip: routerPending,
+    `,
   });
 
+  return {
+    props: {
+      setCard: data.setCard,
+    },
+  };
+}
+
+const SetCards = ({ setCard }) => {
   return (
     <div className="flex-grid">
-      {data
-        ? data.setCard.data.map((card, i) => (
+      {setCard
+        ? setCard.data.map((card, i) => (
             <div key={i} className="column quarters">
               <CardSingle card={card} />
             </div>

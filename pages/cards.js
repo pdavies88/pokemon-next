@@ -1,38 +1,42 @@
-// import Link from "next/link";
-import { useQuery, gql } from "@apollo/client";
+import { gql } from "@apollo/client";
 import { useState } from "react";
 import CardSingle from "../components/CardSingle";
+import client from "../apollo-client";
 
-const Cards = () => {
+export async function getServerSideProps(context) {
+  const { q } = context.query;
+  // Escaping the Escape because it needs to use double quotes inside double quotes for multiple word queries
+  const { data } = await client.query({
+    query: gql`
+      query PokemonSingle {
+        card(q: "name:\\"${q}\\"")
+          @rest(type: "Card", path: "cards?{args}") {
+          data
+        }
+      }
+    `,
+  });
+
+  return {
+    props: {
+      card: data.card,
+    },
+  };
+}
+
+const Cards = ({ card }) => {
   const [cardQuery, setCardQuery] = useState("");
-  const [cardValue, setCardValue] = useState("");
-  const [valuePending, setValuePending] = useState(true);
 
   const handleChange = (e) => {
-    e.target.value;
     setCardQuery(e.target.value);
-    setValuePending(true);
   };
 
   const handleSubmit = (e) => {
-    setCardValue(cardQuery);
-    setValuePending(false);
     e.preventDefault();
+    let searchParams = new URLSearchParams(window.location.search);
+    searchParams.set("q", cardQuery);
+    window.location.search = searchParams.toString();
   };
-
-  // Escaping the Escape because it needs to use double quotes inside double quotes for multiple word queries
-  const PokemonGroup = gql`
-    query PokemonSingle {
-      card(q: "name:\\"${cardValue}\\"")
-        @rest(type: "Card", path: "cards?{args}") {
-        data
-      }
-    }
-  `;
-
-  const { data } = useQuery(PokemonGroup, {
-    skip: valuePending,
-  });
 
   return (
     <div>
@@ -45,8 +49,8 @@ const Cards = () => {
         <input type="submit" value="Submit" />
       </form>
       <div className="flex-grid">
-        {data
-          ? data.card.data.map((card, i) => (
+        {card
+          ? card.data.map((card, i) => (
               <div key={i} className="column quarters">
                 <CardSingle card={card} />
               </div>
